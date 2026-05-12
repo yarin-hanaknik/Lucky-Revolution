@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Revolution — Screen Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #7A5C1A;
+    --crimson: #8B1A1A;
+    --crimson-light: #C0392B;
+    --crimson-deep: #5A0808;
+    --dark: #0E0E0E;
+    --dark-2: #161616;
+    --dark-3: #1E1E1E;
+    --dark-4: #242424;
+    --dark-5: #2C2C2C;
+    --mid: #3A3A3A;
+    --text-primary: #F0EDE8;
+    --text-secondary: #A09A90;
+    --text-dim: #605A52;
+    --slice-1: #1a2a4a;
+    --slice-2: #2a1a1a;
+    --slice-3: #1a2a1a;
+    --slice-4: #2a2a1a;
+    --slice-5: #1a1a2a;
+    --slice-6: #1e2d20;
+    --slice-7: #2d1e1e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0A0A0A;
+    font-family: 'DM Sans', sans-serif;
+    padding: 60px 40px;
+    min-width: 1400px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .page-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .screens-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .screen-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .screen-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .screen-label span {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    opacity: 0.6;
+    margin-top: 2px;
+    text-transform: none;
+  }
+
+  /* ── PHONE SHELL ── */
+  .phone {
+    width: 220px;
+    background: var(--dark-2);
+    border-radius: 28px;
+    border: 1px solid #2A2A2A;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .phone-inner {
+    padding: 14px 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  /* ── HEADER ── */
+  .ui-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ui-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+  }
+  .ui-badge {
+    font-size: 9px;
+    color: var(--text-secondary);
+    background: var(--dark-4);
+    border: 0.5px solid #333;
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── WHEEL ── */
+  .wheel-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+  }
+  .wheel-wrap canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .wheel-qbtn {
+    position: absolute;
+    bottom: 8%;
+    right: 8%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    z-index: 2;
+  }
+
+  /* ── VAULT OVERLAY ── */
+  .vault-face {
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+    border-radius: 50%;
+    background: var(--dark-3);
+    border: 3px solid var(--gold);
+  }
+  .vault-face-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .vault-trophy { font-size: 42px; line-height: 1; }
+  .vault-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* ── BUTTONS ── */
+  .ui-spin-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: #1A1000;
+    background: var(--gold);
+  }
+  .ui-spin-btn.vault { background: var(--crimson); color: #fff; font-size: 11px; }
+  .ui-spin-btn.disabled { opacity: 0.4; }
+
+  /* ── HINT ── */
+  .ui-hint {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── TRAIL BAR ── */
+  .trail-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--dark-4);
+    border: 0.5px solid #2E2E2E;
+    border-radius: 7px;
+    padding: 7px 10px;
+  }
+  .trail-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: var(--text-secondary);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .trail-grid-icon {
+    width: 10px;
+    height: 10px;
+    display: grid;
+    grid-template-columns: repeat(3,3px);
+    gap: 1px;
+    opacity: 0.5;
+  }
+  .trail-grid-icon span { background: var(--text-secondary); border-radius: 0.5px; }
+  .trail-chev {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* ── PRIZE MAP ── */
+  .prize-map {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .pm-cell {
+    border: 0.5px solid #2A2A2A;
+    border-radius: 6px;
+    padding: 5px 3px;
+    text-align: center;
+    background: var(--dark-4);
+  }
+  .pm-cell.collected {
+    background: #1A1000;
+    border-color: var(--gold-dim);
+  }
+  .pm-cell.grand {
+    grid-column: span 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-color: var(--crimson);
+  }
+  .pm-cell.grand.collected { background: #2A0505; border-color: var(--crimson-light); }
+  .pm-cell .pm-icon { font-size: 13px; display: block; margin-bottom: 1px; }
+  .pm-cell .pm-name { font-size: 8px; color: var(--text-dim); line-height: 1.2; font-family: 'DM Sans', sans-serif; }
+  .pm-cell.collected .pm-name { color: var(--gold-dim); }
+  .pm-cell.collected .pm-icon { filter: grayscale(1); }
+  .pm-cell.grand .pm-name { font-size: 9px; color: var(--crimson-light); font-weight: 500; font-family: 'Syne', sans-serif; }
+
+  /* ── CLAIM COVER ── */
+  .claim-cover {
+    position: absolute;
+    inset: 0;
+    background: var(--dark-2);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+  .claim-top {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px 10px;
+    gap: 5px;
+  }
+  .claim-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .claim-icon { font-size: 54px; line-height: 1; margin: 4px 0; }
+  .claim-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+  }
+  .claim-tag {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .claim-prog {
+    font-size: 9px;
+    color: var(--text-dim);
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .claim-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--dark-4);
+    border: 0.5px solid #2E2E2E;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 9px;
+    color: var(--text-secondary);
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 4px;
+  }
+  .claim-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .claim-pill.red .dot { background: var(--crimson-light); }
+  .claim-btns {
+    padding: 10px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 0.5px solid #222;
+  }
+  .claim-cta {
+    width: 100%;
+    padding: 10px;
+    border-radius: 9px;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .claim-cta.gold { background: var(--gold); color: #1A1000; }
+  .claim-cta.red { background: var(--crimson); color: #fff; }
+  .claim-cta.secondary { background: var(--dark-4); color: var(--text-secondary); border: 0.5px solid #2E2E2E; font-weight: 400; }
+
+  /* ── ODDS SHEET ── */
+  .odds-drop {
+    background: var(--dark-3);
+    border: 0.5px solid #2A2A2A;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .odds-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+  }
+  .odds-title { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; color: var(--text-primary); }
+  .odds-x { font-size: 10px; color: var(--text-dim); }
+  .odds-sub { font-size: 8px; color: var(--text-dim); margin-bottom: 7px; font-family: 'DM Sans', sans-serif; }
+  .odds-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 0.5px solid #222; }
+  .odds-row:last-child { border-bottom: none; }
+  .odds-row-left { font-size: 9px; color: var(--text-secondary); font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 4px; }
+  .odds-row-right { font-size: 9px; color: var(--text-dim); font-family: 'DM Sans', sans-serif; }
+  .odds-row.grand .odds-row-left { color: var(--crimson-light); font-weight: 500; }
+  .odds-row.grand .odds-row-right { color: var(--crimson-light); }
+
+  /* annotation strip */
+  .anno {
+    background: #111;
+    border-top: 1px solid #1E1E1E;
+    padding: 10px 12px;
+    font-size: 8px;
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .anno strong { color: var(--gold); font-weight: 500; }
+
+  /* section divider */
+  .section-divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 40px;
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-divider-line { flex: 1; height: 0.5px; background: #1E1E1E; }
+  .section-divider-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* row label */
+  .row-title {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .row-title h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .row-title p { font-size: 11px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Grand Revolution — Screen Mockups</h1>
+  <p>Match Masters Web Shop &nbsp;·&nbsp; Internal design reference &nbsp;·&nbsp; v1</p>
+</div>
+
+<!-- ROW 1: MAIN STATES -->
+<div class="row-title">
+  <h2>Wheel states</h2>
+  <p>Main wheel view across key moments in a revolution</p>
+</div>
+
+<div class="screens-row">
+
+  <!-- Screen 1: Full wheel, 8 slices -->
+  <div class="screen-col">
+    <div class="screen-label">State 1 — full wheel<span>8 slices · revolution start</span></div>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="wheel-wrap">
+          <canvas id="c1" width="196" height="196"></canvas>
+          <div class="wheel-qbtn">?</div>
+        </div>
+        <div class="ui-spin-btn">Ride</div>
+        <div class="ui-hint">Grand Prize odds grow with every ride</div>
+        <div class="trail-bar">
+          <div class="trail-bar-left">
+            <div class="trail-grid-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            0 of 7 collected · Tap to see Prize Map
+          </div>
+          <div class="trail-chev">›</div>
+        </div>
+      </div>
+      <div class="anno"><strong>Full wheel.</strong> Grand Prize is the smallest slice. Slice size = odds — no numbers shown.</div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Mid revolution, 5 slices -->
+  <div class="screen-col">
+    <div class="screen-label">State 2 — mid revolution<span>5 slices · Grand Prize growing</span></div>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="wheel-wrap">
+          <canvas id="c2" width="196" height="196"></canvas>
+          <div class="wheel-qbtn">?</div>
+        </div>
+        <div class="ui-spin-btn">Spin</div>
+        <div class="ui-hint">Grand Prize now at 18% — keep riding!</div>
+        <div class="trail-bar">
+          <div class="trail-bar-left">
+            <div class="trail-grid-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            3 of 7 collected · Tap to see Prize Map
+          </div>
+          <div class="trail-chev">›</div>
+        </div>
+      </div>
+      <div class="anno"><strong>Mid revolution.</strong> 3 slices removed. Grand Prize visibly larger. Hint updates with live %.</div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Prize map expanded -->
+  <div class="screen-col">
+    <div class="screen-label">State 3 — prize map open<span>trail expanded · 4 collected</span></div>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="wheel-wrap">
+          <canvas id="c3" width="196" height="196"></canvas>
+          <div class="wheel-qbtn">?</div>
+        </div>
+        <div class="ui-spin-btn">Ride</div>
+        <div class="ui-hint">Grand Prize now at 22% — keep riding!</div>
+        <div class="trail-bar" style="margin-bottom:0">
+          <div class="trail-bar-left">
+            <div class="trail-grid-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            4 of 7 collected · Prize Map
+          </div>
+          <div class="trail-chev" style="transform:rotate(90deg)">›</div>
+        </div>
+        <div class="prize-map">
+          <div class="pm-cell collected"><span class="pm-icon">✓</span><span class="pm-name">200 Coins</span></div>
+          <div class="pm-cell collected"><span class="pm-icon">✓</span><span class="pm-name">Booster Pack</span></div>
+          <div class="pm-cell collected"><span class="pm-icon">✓</span><span class="pm-name">5 Lives</span></div>
+          <div class="pm-cell collected"><span class="pm-icon">✓</span><span class="pm-name">3 Boosters</span></div>
+          <div class="pm-cell"><span class="pm-icon">⭐</span><span class="pm-name">Rare Sticker</span></div>
+          <div class="pm-cell"><span class="pm-icon">💎</span><span class="pm-name">750 Coins</span></div>
+          <div class="pm-cell"><span class="pm-icon">💰</span><span class="pm-name">500 Coins</span></div>
+          <div class="pm-cell grand"><span class="pm-icon">🏆</span><span class="pm-name">Grand Prize</span></div>
+        </div>
+      </div>
+      <div class="anno"><strong>Prize map.</strong> All 8 prizes always visible. Collected = gold fill + checkmark. Grand Prize pinned last in crimson.</div>
+    </div>
+  </div>
+
+  <!-- Screen 4: Vault state -->
+  <div class="screen-col">
+    <div class="screen-label">State 4 — vault state<span>only Grand Prize remains</span></div>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="vault-face">
+          <div class="vault-face-inner">
+            <div class="vault-trophy">🏆</div>
+            <div class="vault-label">The vault is yours</div>
+          </div>
+        </div>
+        <div class="ui-spin-btn vault">Open Your Grand Prize 🏆</div>
+        <div class="ui-hint">You've earned it — no ride needed</div>
+        <div class="trail-bar">
+          <div class="trail-bar-left">
+            <div class="trail-grid-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            7 of 7 collected · Tap to see Prize Map
+          </div>
+          <div class="trail-chev">›</div>
+        </div>
+      </div>
+      <div class="anno"><strong>Vault state.</strong> Wheel replaced by trophy. Direct claim — no ride. Framed as earned, not lucky.</div>
+    </div>
+  </div>
+
+  <!-- Screen 5: Odds sheet -->
+  <div class="screen-col">
+    <div class="screen-label">State 5 — odds sheet<span>? button · mid revolution</span></div>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="wheel-wrap">
+          <canvas id="c5" width="196" height="196"></canvas>
+          <div class="wheel-qbtn">?</div>
+        </div>
+        <div class="ui-spin-btn disabled">Ride</div>
+        <div class="odds-drop">
+          <div class="odds-header">
+            <div class="odds-title">Current odds</div>
+            <div class="odds-x">✕</div>
+          </div>
+          <div class="odds-sub">5 slices remaining this revolution</div>
+          <div class="odds-row"><div class="odds-row-left">❤️ 5 Lives</div><div class="odds-row-right">●●&nbsp;&nbsp;22.1%</div></div>
+          <div class="odds-row"><div class="odds-row-left">🚀 3 Boosters</div><div class="odds-row-right">●●&nbsp;&nbsp;20.6%</div></div>
+          <div class="odds-row"><div class="odds-row-left">⭐ Rare Sticker</div><div class="odds-row-right">●●&nbsp;&nbsp;19.1%</div></div>
+          <div class="odds-row"><div class="odds-row-left">💎 750 Coins</div><div class="odds-row-right">●&nbsp;&nbsp;&nbsp;&nbsp;13.2%</div></div>
+          <div class="odds-row grand"><div class="odds-row-left">🏆 Grand Prize</div><div class="odds-row-right">●&nbsp;&nbsp;&nbsp;&nbsp;25.0%</div></div>
+        </div>
+      </div>
+      <div class="anno"><strong>Odds sheet.</strong> Accessible via ? button. Dot scale mirrors wheel size. Exact % for transparency.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SECTION DIVIDER -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-label">Claim popup</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<div class="row-title" style="margin-bottom:32px">
+  <h2>Claim popup states</h2>
+  <p>Full-cover popup appears after the wheel lands. Wheel updates behind it before the player dismisses.</p>
+</div>
+
+<div class="screens-row">
+
+  <!-- Claim: standard prize -->
+  <div class="screen-col">
+    <div class="screen-label">Claim — standard prize<span>non-grand win</span></div>
+    <div class="phone" style="height:480px;position:relative">
+      <div class="phone-inner" style="opacity:0.25;pointer-events:none">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="wheel-wrap">
+          <canvas id="c_bg1" width="196" height="196"></canvas>
+        </div>
+        <div class="ui-spin-btn disabled">Ride</div>
+        <div class="ui-hint">Grand Prize now at 14% — keep riding!</div>
+      </div>
+      <div class="claim-cover">
+        <div class="claim-top">
+          <div class="claim-label">You won</div>
+          <div class="claim-icon">🎁</div>
+          <div class="claim-name">Booster Pack</div>
+          <div class="claim-tag">One ride closer</div>
+          <div class="claim-prog">6 slices remain this revolution</div>
+          <div class="claim-pill"><span class="dot"></span>Reward will be added to your account</div>
+        </div>
+        <div class="claim-btns">
+          <div class="claim-cta gold">Got it</div>
+          <div class="claim-cta secondary">See remaining Prize Map</div>
+        </div>
+      </div>
+      <div class="anno" style="position:relative;z-index:11"><strong>Full cover.</strong> Wheel (updated state) is behind. "Got it" acknowledges reward. Map CTA opens prize trail on dismiss.</div>
+    </div>
+  </div>
+
+  <!-- Claim: grand prize -->
+  <div class="screen-col">
+    <div class="screen-label">Claim — Grand Prize<span>revolution complete</span></div>
+    <div class="phone" style="height:480px;position:relative">
+      <div class="phone-inner" style="opacity:0.25;pointer-events:none">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="vault-face" style="width:100%;padding-bottom:100%;position:relative">
+          <div class="vault-face-inner"><div style="font-size:36px">🏆</div></div>
+        </div>
+      </div>
+      <div class="claim-cover">
+        <div class="claim-top">
+          <div class="claim-label">Grand Prize unlocked</div>
+          <div class="claim-icon">🏆</div>
+          <div class="claim-name">Grand Prize</div>
+          <div class="claim-tag">You earned it through persistence</div>
+          <div class="claim-prog">New revolution begins!</div>
+          <div class="claim-pill red"><span class="dot"></span>Grand Prize reward sent to your inbox</div>
+        </div>
+        <div class="claim-btns">
+          <div class="claim-cta red">Claim &amp; start new revolution</div>
+        </div>
+      </div>
+      <div class="anno" style="position:relative;z-index:11"><strong>Grand Prize.</strong> Crimson treatment. Single CTA — map button hidden. Reset triggers on tap.</div>
+    </div>
+  </div>
+
+  <!-- Claim: vault direct -->
+  <div class="screen-col">
+    <div class="screen-label">Claim — vault direct<span>no ride · earned claim</span></div>
+    <div class="phone" style="height:480px;position:relative">
+      <div class="phone-inner" style="opacity:0.25;pointer-events:none">
+        <div class="ui-header">
+          <div class="ui-title">Grand Revolution</div>
+        </div>
+        <div class="vault-face" style="width:100%;padding-bottom:100%;position:relative">
+          <div class="vault-face-inner"><div style="font-size:36px">🏆</div></div>
+        </div>
+        <div class="ui-spin-btn vault" style="font-size:9px;opacity:0.5">Open Your Grand Prize 🏆</div>
+      </div>
+      <div class="claim-cover" style="background:var(--crimson-deep)">
+        <div class="claim-top">
+          <div class="claim-label" style="color:rgba(255,255,255,0.4)">Vault opened</div>
+          <div class="claim-icon">🏆</div>
+          <div class="claim-name" style="color:#fff">Grand Prize</div>
+          <div class="claim-tag" style="color:rgba(255,255,255,0.6)">You earned it through persistence</div>
+          <div class="claim-prog" style="color:rgba(255,255,255,0.4)">New revolution begins!</div>
+          <div class="claim-pill red" style="border-color:rgba(255,255,255,0.15)"><span class="dot"></span>Grand Prize reward sent to your inbox</div>
+        </div>
+        <div class="claim-btns" style="border-top-color:rgba(255,255,255,0.08)">
+          <div class="claim-cta" style="background:rgba(255,255,255,0.15);color:#fff;font-weight:700">Claim &amp; start new revolution</div>
+        </div>
+      </div>
+      <div class="anno" style="position:relative;z-index:11"><strong>Vault direct claim.</strong> Full crimson treatment — distinct from a lucky win. Same outcome, different emotional framing.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="height:60px"></div>
+
+<script>
+const GOLD='#C9A84C', DGOLD='#7A5C1A', DCRIMSON='#5A0A0A';
+const PALS=['#1a2a4a','#2a1a1a','#1a2a1a','#2a2a1a','#1a1a2a','#1e2d20','#2d1e1e'];
+
+function drawWheel(canvasId, slices) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, cx = W/2, cy = W/2, R = W*0.435, rim = W*0.05;
+  ctx.clearRect(0,0,W,W);
+  const tw = slices.reduce((s,p)=>s+p.w,0);
+  let a = -Math.PI/2;
+  slices.forEach((s,i)=>{
+    const span = (s.w/tw)*2*Math.PI;
+    const start = a; a += span;
+    const mid = start + span/2;
+    const bg = s.grand ? DCRIMSON : PALS[i%PALS.length];
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,start,a); ctx.closePath();
+    ctx.fillStyle = bg; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1; ctx.stroke();
+    const tr=R*0.63, tx=cx+Math.cos(mid)*tr, ty=cy+Math.sin(mid)*tr;
+    const fs = span>0.65?14:span>0.38?11:9;
+    ctx.save(); ctx.translate(tx,ty); ctx.rotate(mid+Math.PI/2);
+    ctx.font=`${fs}px sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(s.icon,0,0); ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,R+rim,0,2*Math.PI); ctx.arc(cx,cy,R,0,2*Math.PI,true);
+  ctx.fillStyle=GOLD; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,R+rim+1,0,2*Math.PI); ctx.strokeStyle=DGOLD; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,2*Math.PI); ctx.strokeStyle=DGOLD; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,W*0.06,0,2*Math.PI); ctx.fillStyle='#111'; ctx.fill(); ctx.strokeStyle=GOLD; ctx.lineWidth=1.5; ctx.stroke();
+  const th=W*0.06,tw2=W*0.02,ty2=cy-R-rim-1;
+  ctx.beginPath(); ctx.moveTo(cx,ty2+2); ctx.lineTo(cx-tw2,ty2-th+tw2); ctx.lineTo(cx+tw2,ty2-th+tw2); ctx.closePath();
+  ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=DGOLD; ctx.lineWidth=1; ctx.stroke();
+}
+
+const full8 = [
+  {icon:'🪙',w:22},{icon:'🎁',w:20},{icon:'❤️',w:15},{icon:'🚀',w:14},
+  {icon:'⭐',w:13},{icon:'💎',w:9},{icon:'💰',w:4},{icon:'🏆',w:3,grand:true}
+];
+const mid5 = [
+  {icon:'⭐',w:13},{icon:'💎',w:9},{icon:'💰',w:4},{icon:'🏆',w:9,grand:true}
+];
+const map4 = [
+  {icon:'⭐',w:13},{icon:'💎',w:9},{icon:'💰',w:4},{icon:'🏆',w:12,grand:true}
+];
+const odds5 = [
+  {icon:'❤️',w:15},{icon:'🚀',w:14},{icon:'⭐',w:13},{icon:'💎',w:9},{icon:'🏆',w:17,grand:true}
+];
+const bg1 = [
+  {icon:'❤️',w:15},{icon:'⭐',w:13},{icon:'💎',w:9},{icon:'💰',w:4},{icon:'🏆',w:5,grand:true}
+];
+
+drawWheel('c1', full8);
+drawWheel('c2', mid5);
+drawWheel('c3', map4);
+drawWheel('c5', odds5);
+drawWheel('c_bg1', bg1);
+</script>
+</body>
+</html>
