@@ -292,28 +292,39 @@ function drawWheel(ang=0){
   ctx.fillStyle=RC;ctx.fill();ctx.strokeStyle=RD;ctx.lineWidth=1;ctx.stroke();
 }
 
-// ── ACCURATE LANDING DETECTION ──
-// Reads which slice is under the ticker (top / 12 o'clock position) at the final animAngle
-function sliceAtTicker(ang){
+// ── SINGLE SOURCE OF TRUTH FOR SLICE GEOMETRY ──
+// drawWheel draws slices starting at angle: -PI/2 + ang (where ang = animAngle)
+// The ticker arrow sits at exactly -PI/2 (top of the canvas, fixed).
+// getSliceAngles returns [{prize, start, end}] in the same absolute frame
+// as the drawn wheel, for a given rotation `ang`.
+function getSliceAngles(ang){
   const tw=totalW();
-  // Ticker is at -PI/2 (top). We need to find which slice occupies that angle
-  // after the wheel has rotated by `ang`.
-  // Slice starts are computed from -PI/2 + ang, but we want to find which slice
-  // contains the fixed ticker position (-PI/2), so we compute slice angles
-  // WITHOUT the rotation offset and then check if (-PI/2 - ang) normalised
-  // falls within each slice.
-  let tickerAngle = ((-Math.PI/2) - ang) % (2*Math.PI);
-  if(tickerAngle < 0) tickerAngle += 2*Math.PI;
-  // Shift to start from 0 (matching slice layout which starts at -PI/2)
-  // Slice layout starts at -PI/2 = -1.5708, map to 0-based
-  let a = 0; // relative start
+  const result=[];
+  let a=-Math.PI/2+ang;
   for(const p of active){
     const span=(p.weight/tw)*2*Math.PI;
-    const end = a + span;
-    if(tickerAngle >= a && tickerAngle < end) return p;
-    a = end;
+    result.push({prize:p, start:a, end:a+span});
+    a+=span;
   }
-  return active[active.length-1];
+  return result;
+}
+
+// Which prize is under the ticker at rotation `ang`?
+// Normalises the ticker position into the wheel's current frame and scans.
+function sliceAtTicker(ang){
+  const slices=getSliceAngles(ang);
+  // Ticker is fixed at -PI/2. Normalise to [0, 2PI) for comparison.
+  const norm2pi=v=>((v%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+  const ticker=norm2pi(-Math.PI/2);
+  for(const s of slices){
+    if(norm2pi(s.start)<=ticker && ticker<norm2pi(s.end)) return s.prize;
+    // Handle wrap-around: slice spans the 0/2PI boundary
+    const ns=norm2pi(s.start), ne=norm2pi(s.end);
+    if(ns>ne){ // wraps
+      if(ticker>=ns || ticker<ne) return s.prize;
+    }
+  }
+  return slices[slices.length-1].prize;
 }
 
 function weightedPick(){
@@ -322,28 +333,28 @@ function weightedPick(){
   return active[active.length-1];
 }
 
-// Compute the exact dest angle to land a specific slice under the ticker
+// Compute the exact final animAngle that places targetId's slice mid under the ticker.
+// Uses the same geometry as getSliceAngles so draw, detect, and dest are all consistent.
 function destForSlice(targetId){
   const tw=totalW();
-  let a=0;
-  let targetStart=0,targetSpan=0;
+  let offset=0; // offset from -PI/2 (the natural start)
   for(const p of active){
     const span=(p.weight/tw)*2*Math.PI;
-    if(p.id===targetId){ targetStart=a; targetSpan=span; break; }
-    a+=span;
+    if(p.id===targetId){
+      // Mid of this slice in the un-rotated frame (relative to -PI/2)
+      const mid=offset+span/2;
+      // To put this mid under the ticker (-PI/2), we need:
+      // -PI/2 + animAngle + mid = -PI/2  =>  animAngle = -mid
+      const needed=((-mid)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      const cur=(animAngle%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      let delta=needed-cur;
+      if(delta<0.05) delta+=2*Math.PI; // at least a small forward nudge
+      const fullSpins=(Math.floor(Math.random()*3)+4)*2*Math.PI;
+      return animAngle+fullSpins+delta;
+    }
+    offset+=span;
   }
-  // We want the middle of the target slice to be at the ticker (top)
-  const targetMidRelative = targetStart + targetSpan/2;
-  // The wheel draws slices starting at -PI/2 + animAngle
-  // We need: -PI/2 + animAngle + targetMidRelative = -PI/2  (mod 2PI)
-  // => animAngle = -targetMidRelative (mod 2PI)
-  const needed = ((-targetMidRelative) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
-  const current = animAngle % (2*Math.PI);
-  let delta = needed - current;
-  if(delta < 0) delta += 2*Math.PI;
-  if(delta < 0.1) delta += 2*Math.PI; // ensure at least one full pass
-  const fullSpins = (Math.floor(Math.random()*3)+4)*2*Math.PI;
-  return animAngle + fullSpins + delta;
+  return animAngle+(5)*2*Math.PI;
 }
 
 function doSpin(){
@@ -361,9 +372,10 @@ function doSpin(){
     drawWheel(animAngle);
     if(t<1){requestAnimationFrame(frame);}
     else{
-      animAngle=animAngle%(2*Math.PI);
+      // Keep animAngle as-is (don't normalise) — geometry functions handle it
+      // Only clamp to prevent infinite growth over many spins
+      if(animAngle > 1000) animAngle -= Math.floor(animAngle/(2*Math.PI))*2*Math.PI;
       spinning=false;
-      // Use ticker detection as source of truth
       const landed=sliceAtTicker(animAngle);
       onLanded(landed);
     }
