@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Masters — 7 Days Bonus Event</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ─── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Page ───────────────────────────────────────────── */
+:root {
+  --orange:     #C85A0A;
+  --orange-lt:  #FDF0E8;
+  --green:      #2A852A;
+  --green-lt:   #EAF5EA;
+  --red:        #BE2E2E;
+  --red-lt:     #FDEAEA;
+  --gray-1:     #1a1a1a;
+  --gray-2:     #555;
+  --gray-3:     #999;
+  --gray-4:     #ccc;
+  --gray-5:     #ebebeb;
+  --gray-6:     #f5f5f3;
+  --gray-7:     #fafaf8;
+  --white:      #ffffff;
+  --tier-lg:    #9E4606;
+  --tier-d3:    #46129E;
+  --tier-dx:    #0E52A0;
+  --tier-dg:    #9A6408;
+  --radius-sm:  7px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --font:       'Nunito', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: #0d0920;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 56px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle dot-grid texture on bg */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ─── Page header ─────────────────────────────────── */
+.page-head {
+  text-align: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+.page-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  background: rgba(200,90,10,.12);
+  border: .5px solid rgba(200,90,10,.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin-bottom: 8px;
+}
+.page-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,.85);
+  letter-spacing: -.01em;
+}
+.page-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,.3);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* ─── State switcher ──────────────────────────────── */
+.switcher {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 28px;
+  max-width: 360px;
+}
+.s-btn {
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: .5px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.05);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,.4);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.s-btn:hover {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.75);
+  border-color: rgba(255,255,255,.25);
+}
+.s-btn.on {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: white;
+}
+
+/* ─── Panel ───────────────────────────────────────── */
+.panel {
+  width: 316px;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25), 0 16px 48px rgba(0,0,0,.35);
+}
+
+/* ─── Panel header ────────────────────────────────── */
+.panel-title {
+  padding: 15px 16px 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gray-1);
+  letter-spacing: -.01em;
+}
+
+/* ─── Calendar ────────────────────────────────────── */
+.cal-wrap {
+  padding: 10px 16px 13px;
+}
+.eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--gray-3);
+  margin-bottom: 7px;
+}
+.cal-strip {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cal-strip::-webkit-scrollbar { display: none; }
+.cal-day {
+  flex-shrink: 0;
+  width: 28px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+.cal-day .d-n { font-size: 9px; font-weight: 700; line-height: 1; }
+.cal-day .d-i { font-size: 10px; line-height: 1; }
+.cal-done  { background: var(--green-lt); }
+.cal-done  .d-n { color: #236823; }
+.cal-done  .d-i { color: var(--green); }
+.cal-today { background: var(--orange); }
+.cal-today .d-n, .cal-today .d-i { color: white; }
+.cal-fut   { background: var(--gray-6); }
+.cal-fut   .d-n { color: var(--gray-4); }
+.cal-fut   .d-i { color: var(--gray-4); }
+
+/* ─── Divider ─────────────────────────────────────── */
+.divider { height: .5px; background: var(--gray-5); margin: 0 16px; }
+
+/* ─── Bonus section ───────────────────────────────── */
+.bonus-wrap { padding: 12px 16px 0; }
+.bonus-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.bonus-timer {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange);
+}
+.bonus-timer.done { color: var(--green); }
+
+/* ─── Reward row ──────────────────────────────────── */
+.reward-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.r-box {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background .3s;
+}
+.r-box i { font-size: 22px; color: rgba(255,255,255,.95); }
+.r-box.locked {
+  background: var(--gray-6);
+  border: 1.5px dashed var(--gray-4);
+}
+.r-box.locked i { color: var(--gray-4) !important; font-size: 18px; }
+.r-box.tier-lg { background: var(--tier-lg); }
+.r-box.tier-d3 { background: var(--tier-d3); }
+.r-box.tier-dx { background: var(--tier-dx); }
+.r-box.tier-dg { background: var(--tier-dg); }
+
+/* Shine shimmer on box upgrade */
+@keyframes box-shine {
+  0%   { opacity: 0; transform: translateX(-100%) skewX(-15deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(200%) skewX(-15deg); }
+}
+.r-box::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.28) 50%, transparent 100%);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+.r-box.shine::after { animation: box-shine .55s ease forwards; }
+
+.r-info { flex: 1; min-width: 0; }
+.r-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--gray-1);
+  margin-bottom: 2px;
+  line-height: 1.25;
+  transition: color .2s;
+}
+.r-name.dim { font-weight: 500; color: var(--gray-3); font-size: 12px; }
+.r-sub {
+  font-size: 11px;
+  color: var(--gray-3);
+  margin-bottom: 8px;
+  line-height: 1.45;
+  font-weight: 500;
+  min-height: 16px;
+}
+
+/* ─── Progress dots ───────────────────────────────── */
+.prog-dots { display: flex; gap: 4px; }
+.p-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .25s, transform .15s;
+}
+.p-dot i { font-size: 9px; color: white; }
+.p-dot.green  { background: var(--green); }
+.p-dot.red    { background: var(--red); }
+.p-dot.today  { background: var(--orange); }
+.p-dot.future { background: var(--gray-6); border: .5px solid var(--gray-5); }
+.p-dot.future i { color: var(--gray-4); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .55; transform: scale(.92); }
+}
+.p-dot.today { animation: pulse 1.5s ease-in-out infinite; }
+
+/* ─── Score sheet ─────────────────────────────────── */
+.score-sheet {
+  margin: 11px 16px 16px;
+  border: .5px solid var(--gray-5);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.ss-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom: .5px solid var(--gray-5);
+  border-left: 2.5px solid transparent;
+  transition: background .2s;
+}
+.ss-row:last-child { border-bottom: none; }
+.ss-row.active { background: var(--gray-7); }
+
+.ss-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.ss-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-3);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .2s;
+}
+.ss-name.active { font-weight: 700; color: var(--gray-1); }
+
+.ss-dots { display: flex; gap: 2px; flex-shrink: 0; }
+.ss-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ss-dot.g { background: var(--green); }
+.ss-dot.r { background: var(--red); }
+
+/* ─── Spec footer (below panel) ─────────────────── */
+.spec-block {
+  margin-top: 28px;
+  width: 316px;
+  background: rgba(255,255,255,.04);
+  border: .5px solid rgba(255,255,255,.08);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+.spec-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  margin-bottom: 10px;
+}
+.spec-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: .5px solid rgba(255,255,255,.06);
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-swatch {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.spec-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,.55);
+  flex: 1;
+}
+.spec-req {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,.3);
+}
+.spec-dots { display: flex; gap: 2px; }
+.spec-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.spec-dot.g { background: rgba(42,133,42,.7); }
+.spec-dot.r { background: rgba(190,46,46,.6); }
+
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-tag">UI Component</div>
+  <div class="page-title">7 Days Bonus Event</div>
+  <div class="page-sub">Match Masters Web Hub — Daily Rewards Panel</div>
+</div>
+
+<div class="switcher" id="switcher"></div>
+
+<div class="panel" id="panel"></div>
+
+<div class="spec-block" id="spec-block"></div>
+
+<script>
+const TIERS = [
+  { k:'lg', name:'Legendary Mix',   color:'#9E4606', boxCls:'tier-lg', icon:'ti-crown',   req:7 },
+  { k:'d3', name:'Diamond \xd73',   color:'#46129E', boxCls:'tier-d3', icon:'ti-diamond', req:6 },
+  { k:'dx', name:'Diamond',          color:'#0E52A0', boxCls:'tier-dx', icon:'ti-diamond', req:5 },
+  { k:'dg', name:'Diamond + Gold',   color:'#9A6408', boxCls:'tier-dg', icon:'ti-gift',    req:3 },
+];
+
+const STATES = [
+  { k:'off', label:'Not started',     dots:['f','f','f','f','f','f','f'], calDone:0, calToday:null, daysLeft:null },
+  { k:'d2',  label:'Day 2',           dots:['g','t','f','f','f','f','f'], calDone:1, calToday:2,    daysLeft:6    },
+  { k:'d5m', label:'Day 5 — 1 miss',  dots:['g','g','g','r','t','f','f'], calDone:4, calToday:5,   daysLeft:3    },
+  { k:'d6',  label:'Day 6 on track',  dots:['g','g','g','g','g','t','f'], calDone:5, calToday:6,    daysLeft:2    },
+  { k:'d7',  label:'7/7 perfect',     dots:['g','g','g','g','g','g','g'], calDone:7, calToday:8,    daysLeft:0    },
+  { k:'e2m', label:'Done — 2 misses', dots:['g','g','r','g','g','r','g'], calDone:7, calToday:null, daysLeft:0    },
+];
+
+function getTier(n) {
+  for (const t of TIERS) { if (n >= t.req) return t; }
+  return null;
+}
+function getAchievable(dots) {
+  const pot = dots.filter(d => d === 'g' || d === 't' || d === 'f').length;
+  return getTier(pot);
+}
+function getLocked(dots) {
+  return getTier(dots.filter(d => d === 'g').length);
+}
+function isComplete(dots) {
+  return !dots.includes('t') && !dots.includes('f');
+}
+
+function calHTML(calDone, calToday) {
+  const total = 10;
+  let h = '<div class="cal-strip">';
+  for (let i = 1; i <= total; i++) {
+    let cls, icon;
+    if (calToday !== null) {
+      if (i < calToday) {
+        cls  = i <= calDone ? 'cal-done' : 'cal-fut';
+        icon = i <= calDone
+          ? '<i class="ti ti-check" aria-hidden="true"></i>'
+          : '<span style="color:#ccc;font-size:10px">·</span>';
+      } else if (i === calToday) {
+        cls  = 'cal-today';
+        icon = '<i class="ti ti-exclamation-mark" aria-hidden="true"></i>';
+      } else {
+        cls  = 'cal-fut';
+        icon = '<span style="color:#ccc;font-size:10px">·</span>';
+      }
+    } else {
+      cls  = i <= calDone ? 'cal-done' : 'cal-fut';
+      icon = i <= calDone
+        ? '<i class="ti ti-check" aria-hidden="true"></i>'
+        : '<span style="color:#ccc;font-size:10px">·</span>';
+    }
+    h += `<div class="cal-day ${cls}"><span class="d-n">${i}</span><span class="d-i">${icon}</span></div>`;
+  }
+  return h + '</div>';
+}
+
+function progressDotsHTML(dots) {
+  const map = { g:'green', r:'red', t:'today', f:'future' };
+  const ico = {
+    g: '<i class="ti ti-check" aria-hidden="true"></i>',
+    r: '',
+    t: '<i class="ti ti-exclamation-mark" aria-hidden="true"></i>',
+    f: '',
+  };
+  return '<div class="prog-dots">' +
+    dots.map(d => `<div class="p-dot ${map[d]}">${ico[d]||''}</div>`).join('') +
+    '</div>';
+}
+
+function boxHTML(tier, shine = false) {
+  if (!tier) {
+    return `<div class="r-box locked"><i class="ti ti-lock" aria-hidden="true"></i></div>`;
+  }
+  return `<div class="r-box ${tier.boxCls}${shine?' shine':''}">
+    <i class="ti ${tier.icon}" aria-hidden="true"></i>
+  </div>`;
+}
+
+function timerHTML(daysLeft, dots) {
+  if (daysLeft === null) return '';
+  if (daysLeft === 0) {
+    const locked = getLocked(dots);
+    return `<span class="bonus-timer done"><i class="ti ti-check" style="font-size:10px;vertical-align:-1px" aria-hidden="true"></i> ${locked ? 'Reward ready' : 'Event complete'}</span>`;
+  }
+  return `<span class="bonus-timer">${daysLeft} day${daysLeft !== 1 ? 's' : ''} left</span>`;
+}
+
+function subTextHTML(state, ach) {
+  const { daysLeft, dots } = state;
+  if (daysLeft === null) return 'Collect your first daily reward to begin';
+  if (daysLeft === 0) {
+    const locked = getLocked(dots);
+    return locked ? `Your <strong>${locked.name}</strong> is ready to claim` : '';
+  }
+  if (!ach) return '';
+  const greens = dots.filter(d => d === 'g').length;
+  const remaining = dots.filter(d => d === 't' || d === 'f').length;
+  if (ach.k === 'lg' && greens + remaining === 7 && !dots.includes('r')) {
+    return 'Perfect run! Keep it up for the top prize';
+  }
+  return `Collect remaining days to reach <strong>${ach.name}</strong>`;
+}
+
+function scoreSheetHTML(ach, started) {
+  let h = '<div class="score-sheet">';
+  for (const t of TIERS) {
+    const isAct = started && ach && ach.k === t.k;
+    const bl    = isAct ? t.color : 'transparent';
+    let dots    = '';
+    for (let i = 0; i < 7; i++) {
+      dots += `<div class="ss-dot ${i < t.req ? 'g' : 'r'}"></div>`;
+    }
+    h += `
+      <div class="ss-row${isAct ? ' active' : ''}" style="border-left-color:${bl}">
+        <div class="ss-swatch" style="background:${t.color}"></div>
+        <span class="ss-name${isAct ? ' active' : ''}">${t.name}</span>
+        <div class="ss-dots">${dots}</div>
+      </div>`;
+  }
+  return h + '</div>';
+}
+
+function specHTML() {
+  let h = `<div class="spec-block" id="spec-block">
+    <div class="spec-title">Tier thresholds</div>`;
+  for (const t of TIERS) {
+    let dots = '';
+    for (let i = 0; i < 7; i++) {
+      dots += `<div class="spec-dot ${i < t.req ? 'g' : 'r'}"></div>`;
+    }
+    h += `<div class="spec-row">
+      <div class="spec-swatch" style="background:${t.color}"></div>
+      <span class="spec-name">${t.name}</span>
+      <div class="spec-dots">${dots}</div>
+      <span class="spec-req">${t.req}/7</span>
+    </div>`;
+  }
+  return h + '</div>';
+}
+
+let prevTierKey = null;
+
+function render(key) {
+  const s     = STATES.find(x => x.k === key);
+  const started = s.daysLeft !== null;
+  const ach   = started ? getAchievable(s.dots) : null;
+  const shine = started && ach && prevTierKey !== null && ach.k !== prevTierKey;
+
+  prevTierKey = ach ? ach.k : null;
+
+  const rName = ach && started ? ach.name : 'Collect to unlock';
+  const rDim  = !started ? ' dim' : '';
+
+  document.getElementById('panel').innerHTML = `
+    <div class="panel-title">Daily Rewards</div>
+
+    <div class="cal-wrap">
+      <div class="eyebrow">Your rewards</div>
+      ${calHTML(s.calDone, s.calToday)}
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="bonus-wrap">
+      <div class="bonus-head">
+        <div class="eyebrow">7 days bonus</div>
+        ${timerHTML(s.daysLeft, s.dots)}
+      </div>
+
+      <div class="reward-row">
+        ${boxHTML(ach, shine)}
+        <div class="r-info">
+          <div class="r-name${rDim}">${rName}</div>
+          <div class="r-sub">${subTextHTML(s, ach)}</div>
+          ${started ? progressDotsHTML(s.dots) : ''}
+        </div>
+      </div>
+    </div>
+
+    ${scoreSheetHTML(ach, started)}
+  `;
+
+  document.querySelectorAll('.s-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.k === key);
+  });
+}
+
+/* Build switcher */
+const sw = document.getElementById('switcher');
+STATES.forEach(s => {
+  const b = document.createElement('button');
+  b.className = 's-btn';
+  b.dataset.k  = s.k;
+  b.textContent = s.label;
+  b.addEventListener('click', () => render(s.k));
+  sw.appendChild(b);
+});
+
+/* Build spec block */
+document.getElementById('spec-block').outerHTML = specHTML();
+
+render('off');
+</script>
+</body>
+</html>
