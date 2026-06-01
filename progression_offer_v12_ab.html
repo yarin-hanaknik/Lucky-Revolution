@@ -1,0 +1,412 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.scene {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding: 16px 8px 16px;
+  flex-wrap: wrap;
+  min-height: 100vh;
+}
+
+.vcol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.vlabel {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 7px;
+}
+
+.overlay {
+  width: 100%;
+  background: #1a1a1a;
+  border-radius: 18px;
+  padding: 10px;
+}
+
+.popup {
+  width: 100%;
+  background: var(--color-background-primary);
+  border-radius: 14px;
+  border: 0.5px solid var(--color-border-tertiary);
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  overflow: hidden;
+}
+
+.ph { flex-shrink:0; border-bottom:0.5px solid var(--color-border-tertiary); padding:10px 12px 8px; }
+.ph-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+.ev-badge { font-size:10px; font-weight:500; background:#FAECE7; color:#993C1D; padding:2px 8px; border-radius:20px; }
+.cd { font-size:10px; font-weight:500; color:#D85A30; font-variant-numeric:tabular-nums; }
+.task-row { display:flex; align-items:center; gap:7px; margin-bottom:7px; }
+.task-icon { width:28px; height:28px; border-radius:7px; background:#FAECE7; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.task-sub { font-size:9px; color:var(--color-text-tertiary); text-transform:uppercase; letter-spacing:0.5px; }
+.task-name { font-size:12px; font-weight:500; color:var(--color-text-primary); }
+.info-btn { margin-left:auto; background:none; border:0.5px solid var(--color-border-secondary); border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--color-text-secondary); font-size:12px; flex-shrink:0; }
+.gbar-row { display:flex; align-items:center; gap:7px; }
+.gtrack { flex:1; height:4px; background:var(--color-background-secondary); border-radius:3px; overflow:hidden; }
+.gfill { height:100%; background:#D85A30; border-radius:3px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.gcount { font-size:10px; font-weight:500; color:var(--color-text-primary); white-space:nowrap; }
+
+.pscroll { flex:1; overflow-y:auto; overflow-x:hidden; padding:8px; }
+.pscroll::-webkit-scrollbar { width:3px; }
+.pscroll::-webkit-scrollbar-thumb { background:var(--color-border-secondary); border-radius:3px; }
+
+.cta-pill { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:500; padding:4px 10px; border-radius:20px; border:none; cursor:pointer; transition:opacity 0.15s, transform 0.1s; white-space:nowrap; flex-shrink:0; }
+.cta-pill:active { transform:scale(0.97); }
+.cta-pill.locked { background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary); cursor:not-allowed; }
+.cta-pill.buy  { background:#D85A30; color:white; }
+.cta-pill.buy:hover { background:#993C1D; }
+.cta-pill.free { background:#639922; color:white; }
+.cta-pill.free:hover { background:#3B6D11; }
+.cta-pill.done { background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); color:var(--color-text-tertiary); cursor:default; }
+
+.items-grid { display:flex; flex-wrap:wrap; gap:3px; flex:1; justify-content:flex-end; }
+.ibox { background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:7px; width:34px; height:34px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+.ie { font-size:13px; }
+.il { font-size:7px; color:var(--color-text-tertiary); line-height:1; text-align:center; }
+.prog-lbl { font-size:9px; font-weight:500; color:var(--color-text-tertiary); font-variant-numeric:tabular-nums; }
+.ms-pill { display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:500; padding:3px 6px; border-radius:20px; white-space:nowrap; flex-shrink:0; background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); color:var(--color-text-secondary); }
+.decoy-row { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:8px 9px; }
+.decoy-items { display:flex; gap:3px; flex-wrap:wrap; }
+
+.va-list { position:relative; display:flex; flex-direction:column; }
+.va-spine { position:absolute; left:7px; top:0; bottom:0; width:3px; background:var(--color-border-tertiary); border-radius:2px; z-index:0; overflow:hidden; }
+.va-spine-fill { position:absolute; bottom:0; left:0; width:100%; background:#D85A30; border-radius:2px; transition:height 0.55s cubic-bezier(0.4,0,0.2,1); }
+.va-row { display:flex; align-items:flex-start; margin-bottom:6px; position:relative; z-index:1; }
+.va-dot-col { width:16px; flex-shrink:0; display:flex; justify-content:center; padding-top:11px; }
+.va-dot { width:10px; height:10px; border-radius:50%; border:2px solid var(--color-border-secondary); background:var(--color-background-primary); transition:background 0.3s, border-color 0.3s; }
+.va-dot.filled { background:#D85A30; border-color:#D85A30; }
+.va-dot.greend { background:#639922; border-color:#639922; }
+.va-card { flex:1; background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:11px; padding:7px 9px; margin-left:6px; transition:border-color 0.3s, background 0.3s, opacity 0.3s; }
+.va-card.unlocked { background:var(--color-background-primary); border-color:var(--color-border-secondary); }
+.va-card.just-u   { border:1.5px solid #D85A30; animation:cpulse 0.7s ease; }
+.va-card.just-u.fc{ border-color:#639922; }
+.va-card.bought   { opacity:0.42; }
+.va-top    { display:flex; align-items:flex-start; gap:5px; margin-bottom:6px; }
+.va-bottom { display:flex; align-items:center; justify-content:space-between; gap:5px; }
+
+.vb-wrap { margin-bottom:6px; }
+.vb-card { background:var(--color-background-secondary); border:0.5px solid var(--color-border-tertiary); border-radius:11px; overflow:hidden; transition:border-color 0.3s, background 0.3s, opacity 0.3s; }
+.vb-card.unlocked { background:var(--color-background-primary); border-color:var(--color-border-secondary); }
+.vb-card.just-u   { border:1.5px solid #D85A30; animation:cpulse 0.7s ease; }
+.vb-card.just-u.fc{ border-color:#639922; }
+.vb-card.bought   { opacity:0.42; }
+.vb-inner  { padding:7px 9px 7px; }
+.vb-top    { display:flex; align-items:flex-start; gap:5px; margin-bottom:6px; }
+.vb-bottom { display:flex; align-items:center; justify-content:space-between; gap:5px; }
+.vb-bar    { height:3px; background:var(--color-border-tertiary); }
+.vb-bar-fill { height:100%; transition:width 0.55s cubic-bezier(0.4,0,0.2,1); }
+
+@keyframes cpulse {
+  0%   { box-shadow:0 0 0 0   rgba(216,90,48,0.35); }
+  50%  { box-shadow:0 0 0 5px rgba(216,90,48,0.10); }
+  100% { box-shadow:0 0 0 0   rgba(216,90,48,0); }
+}
+
+.sim-panel { width:100%; margin-top:8px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.sim-title { font-size:9px; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:0.5px; }
+.sim-btns  { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; }
+.sbtn { font-size:10px; padding:4px 9px; border-radius:20px; border:0.5px solid var(--color-border-secondary); background:var(--color-background-primary); color:var(--color-text-primary); cursor:pointer; font-weight:500; }
+.sbtn:hover { opacity:0.8; }
+.sbtn.pri { background:#D85A30; color:white; border-color:#D85A30; }
+
+.toast { position:fixed; bottom:12px; left:50%; transform:translateX(-50%) translateY(40px); background:#2C2C2A; color:#F1EFE8; font-size:11px; padding:6px 14px; border-radius:20px; opacity:0; transition:transform 0.25s, opacity 0.25s; pointer-events:none; white-space:nowrap; z-index:100; }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+</style>
+
+<div class="scene">
+  <div class="vcol">
+    <div class="vlabel">Variant A — linear bar</div>
+    <div class="overlay">
+      <div class="popup">
+        <div class="ph">
+          <div class="ph-top"><div class="ev-badge">🏆 Trophy Craze</div><div class="cd" id="cdA">11h 42m 09s</div></div>
+          <div class="task-row">
+            <div class="task-icon">🏆</div>
+            <div><div class="task-sub">Active task</div><div class="task-name">Earn Trophies</div></div>
+            <button class="info-btn" aria-label="info"><i class="ti ti-info-circle" aria-hidden="true"></i></button>
+          </div>
+          <div class="gbar-row">
+            <div class="gtrack"><div class="gfill" id="gfA" style="width:0%"></div></div>
+            <div class="gcount"><span id="pvA">0</span> 🏆</div>
+          </div>
+        </div>
+        <div class="pscroll">
+          <div class="va-list" id="listA">
+            <div class="va-spine"><div class="va-spine-fill" id="spineA" style="height:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sim-panel">
+      <div class="sim-title">Dev sim</div>
+      <div class="sim-btns">
+        <button class="sbtn" onclick="add('A',5)">+5 🏆</button>
+        <button class="sbtn" onclick="add('A',15)">+15 🏆</button>
+        <button class="sbtn" onclick="add('A',25)">+25 🏆</button>
+        <button class="sbtn pri" onclick="rst('A')">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="vcol">
+    <div class="vlabel">Variant B — card fill</div>
+    <div class="overlay">
+      <div class="popup">
+        <div class="ph">
+          <div class="ph-top"><div class="ev-badge">🏆 Trophy Craze</div><div class="cd" id="cdB">11h 42m 09s</div></div>
+          <div class="task-row">
+            <div class="task-icon">🏆</div>
+            <div><div class="task-sub">Active task</div><div class="task-name">Earn Trophies</div></div>
+            <button class="info-btn" aria-label="info"><i class="ti ti-info-circle" aria-hidden="true"></i></button>
+          </div>
+          <div class="gbar-row">
+            <div class="gtrack"><div class="gfill" id="gfB" style="width:0%"></div></div>
+            <div class="gcount"><span id="pvB">0</span> 🏆</div>
+          </div>
+        </div>
+        <div class="pscroll"><div id="listB"></div></div>
+      </div>
+    </div>
+    <div class="sim-panel">
+      <div class="sim-title">Dev sim</div>
+      <div class="sim-btns">
+        <button class="sbtn" onclick="add('B',5)">+5 🏆</button>
+        <button class="sbtn" onclick="add('B',15)">+15 🏆</button>
+        <button class="sbtn" onclick="add('B',25)">+25 🏆</button>
+        <button class="sbtn pri" onclick="rst('B')">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.documentElement.style.background = 'var(--color-background-tertiary)';
+document.body.style.background = 'var(--color-background-tertiary)';
+
+var OFFERS = [
+  { id:0, milestone:0,  price:"0.99", isFree:false, isDecoy:true,  items:[{e:"💎",l:"50 gems"},{e:"⚡",l:"3 boosts"}] },
+  { id:1, milestone:15, price:"FREE", isFree:true,  isDecoy:false, items:[{e:"🎁",l:"Chest"},{e:"💎",l:"150 gems"},{e:"🛡️",l:"Shield"}] },
+  { id:2, milestone:30, price:"5.99", isFree:false, isDecoy:false, items:[{e:"💎",l:"400 gems"},{e:"⚡",l:"10 boosts"},{e:"🎯",l:"Dart x5"},{e:"🗡️",l:"Sword"}] },
+  { id:3, milestone:55, price:"8.99", isFree:false, isDecoy:false, items:[{e:"💎",l:"900 gems"},{e:"🏅",l:"Medal"},{e:"⚡",l:"20 boosts"},{e:"🎁",l:"Mega chest"},{e:"✨",l:"Skin frag"}] },
+  { id:4, milestone:75, price:"FREE", isFree:true,  isDecoy:false, items:[{e:"🎉",l:"Bonus gift"},{e:"💎",l:"200 gems"}] },
+];
+
+var MAX = 75;
+var state = {
+  A: { progress:0, purchased:{}, justUnlocked:{} },
+  B: { progress:0, purchased:{}, justUnlocked:{} }
+};
+
+function isUl(o, p) { return p >= o.milestone; }
+
+function cardFillPct(offer, prog) {
+  if (offer.isDecoy) return 100;
+  return Math.min(100, Math.round((prog / offer.milestone) * 100));
+}
+
+function itemsHTML(items) {
+  var h = '';
+  for (var i = 0; i < items.length; i++) {
+    h += '<div class="ibox"><span class="ie">' + items[i].e + '</span><span class="il">' + items[i].l + '</span></div>';
+  }
+  return h;
+}
+
+function ctaPill(offer, ul, pur, v) {
+  if (pur) return '<button class="cta-pill done" disabled><i class="ti ti-check" style="font-size:9px" aria-hidden="true"></i> Collected</button>';
+  if (!ul) {
+    var lp = offer.isFree ? 'FREE' : '$' + offer.price;
+    return '<button class="cta-pill locked" disabled><i class="ti ti-lock" style="font-size:9px" aria-hidden="true"></i> ' + lp + '</button>';
+  }
+  if (offer.isFree) return '<button class="cta-pill free" onclick="collect(\'' + v + '\',' + offer.id + ')">Claim free</button>';
+  return '<button class="cta-pill buy" onclick="collect(\'' + v + '\',' + offer.id + ')">Buy $' + offer.price + '</button>';
+}
+
+function renderA(v) {
+  var s = state[v];
+  var prog = s.progress;
+  var container = document.getElementById('listA');
+  var spineEl = container.querySelector('.va-spine');
+  container.innerHTML = '';
+  container.appendChild(spineEl);
+
+  document.getElementById('pvA').textContent = prog;
+  document.getElementById('gfA').style.width = Math.min(100, Math.round((prog / MAX) * 100)) + '%';
+
+  for (var i = OFFERS.length - 1; i >= 0; i--) {
+    var offer = OFFERS[i];
+    var ul  = isUl(offer, prog);
+    var pur = !!s.purchased[offer.id];
+    var isJust = !!s.justUnlocked[offer.id];
+    var dotCls = (ul || pur) ? (offer.isFree ? 'greend' : 'filled') : '';
+    var cardCls = 'va-card';
+    if (pur) cardCls += ' bought';
+    else if (isJust) cardCls += ' just-u' + (offer.isFree ? ' fc' : '');
+    else if (ul) cardCls += ' unlocked';
+
+    var row = document.createElement('div');
+    row.className = 'va-row';
+
+    if (offer.isDecoy) {
+      row.innerHTML = '<div class="va-dot-col"><div class="va-dot ' + dotCls + '"></div></div>'
+        + '<div class="' + cardCls + '"><div class="decoy-row"><div class="decoy-items">' + itemsHTML(offer.items) + '</div>' + ctaPill(offer, true, pur, v) + '</div></div>';
+    } else {
+      var progStr = pur ? '' : '<span class="prog-lbl">' + Math.min(prog, offer.milestone) + ' / ' + offer.milestone + ' 🏆</span>';
+      row.innerHTML = '<div class="va-dot-col"><div class="va-dot ' + dotCls + '"></div></div>'
+        + '<div class="' + cardCls + '">'
+        + '<div class="va-top"><span class="ms-pill">' + offer.milestone + ' 🏆</span><div class="items-grid">' + itemsHTML(offer.items) + '</div></div>'
+        + '<div class="va-bottom">' + progStr + ctaPill(offer, ul, pur, v) + '</div>'
+        + '</div>';
+    }
+    container.appendChild(row);
+  }
+
+  requestAnimationFrame(function() {
+    var containerRect = container.getBoundingClientRect();
+    var containerH = container.offsetHeight;
+    if (!containerH) return;
+    var dotEls = container.querySelectorAll('.va-dot');
+    var n = dotEls.length;
+    var dotCenters = [];
+    for (var d = 0; d < n; d++) {
+      var r = dotEls[d].getBoundingClientRect();
+      dotCenters.push(r.top + r.height / 2 - containerRect.top);
+    }
+    // dotEls[0]=offer4(75 top), dotEls[n-1]=offer0(0 bottom)
+    var bottomCenter = dotCenters[n - 1];
+    var fillTargetY = bottomCenter;
+    var sortedOffers = OFFERS.slice();
+    for (var j = 0; j < sortedOffers.length; j++) {
+      var o = sortedOffers[j];
+      var dotIdx = (n - 1) - j;
+      if (prog >= o.milestone) {
+        fillTargetY = dotCenters[dotIdx];
+      } else {
+        var prevMilestone = j > 0 ? sortedOffers[j-1].milestone : 0;
+        var prevDotIdx = (n - 1) - (j > 0 ? j - 1 : 0);
+        var prevCenter = dotCenters[prevDotIdx];
+        var span = o.milestone - prevMilestone;
+        var into = prog - prevMilestone;
+        var t = span > 0 ? into / span : 0;
+        fillTargetY = prevCenter + (dotCenters[dotIdx] - prevCenter) * t;
+        break;
+      }
+    }
+    var fillH = Math.max(0, containerH - fillTargetY);
+    var fillPct = Math.min(100, Math.round((fillH / containerH) * 100));
+    var sf = container.querySelector('.va-spine-fill');
+    if (sf) sf.style.height = fillPct + '%';
+  });
+}
+
+function renderB(v) {
+  var s = state[v];
+  var prog = s.progress;
+  var list = document.getElementById('listB');
+  var html = '';
+
+  document.getElementById('pvB').textContent = prog;
+  document.getElementById('gfB').style.width = Math.min(100, Math.round((prog / MAX) * 100)) + '%';
+
+  for (var i = OFFERS.length - 1; i >= 0; i--) {
+    var offer = OFFERS[i];
+    var ul  = isUl(offer, prog);
+    var pur = !!s.purchased[offer.id];
+    var isJust = !!s.justUnlocked[offer.id];
+    var fp = cardFillPct(offer, prog);
+    var barColor = ul ? (offer.isFree ? '#639922' : '#D85A30') : '#B4B2A9';
+
+    if (offer.isDecoy) {
+      html += '<div class="vb-wrap"><div class="vb-card unlocked' + (pur ? ' bought' : '') + '">'
+        + '<div class="decoy-row"><div class="decoy-items">' + itemsHTML(offer.items) + '</div>' + ctaPill(offer, true, pur, v) + '</div>'
+        + '</div></div>';
+      continue;
+    }
+
+    var cardCls = 'vb-card';
+    if (pur) cardCls += ' bought';
+    else if (isJust) cardCls += ' just-u' + (offer.isFree ? ' fc' : '');
+    else if (ul) cardCls += ' unlocked';
+
+    var progStr = pur ? '' : '<span class="prog-lbl">' + Math.min(prog, offer.milestone) + ' / ' + offer.milestone + ' 🏆</span>';
+
+    html += '<div class="vb-wrap"><div class="' + cardCls + '">'
+      + '<div class="vb-inner">'
+      + '<div class="vb-top"><span class="ms-pill">' + offer.milestone + ' 🏆</span><div class="items-grid">' + itemsHTML(offer.items) + '</div></div>'
+      + '<div class="vb-bottom">' + progStr + ctaPill(offer, ul, pur, v) + '</div>'
+      + '</div>'
+      + '<div class="vb-bar"><div class="vb-bar-fill" style="width:' + fp + '%;background:' + barColor + '"></div></div>'
+      + '</div></div>';
+  }
+
+  list.innerHTML = html;
+}
+
+function render(v) { if (v === 'A') renderA(v); else renderB(v); }
+
+function add(v, amount) {
+  var s = state[v];
+  var before = {};
+  for (var i = 0; i < OFFERS.length; i++) { if (s.progress >= OFFERS[i].milestone) before[OFFERS[i].id] = true; }
+  s.progress = Math.min(s.progress + amount, MAX);
+  s.justUnlocked = {};
+  for (var j = 0; j < OFFERS.length; j++) {
+    var o = OFFERS[j];
+    if (s.progress >= o.milestone && !before[o.id]) {
+      s.justUnlocked[o.id] = true;
+      showToast((o.isFree ? '🎁 ' : '🔓 ') + (o.isDecoy ? 'Starter' : o.milestone + ' trophies') + ' unlocked!');
+    }
+  }
+  render(v);
+  setTimeout(function() { s.justUnlocked = {}; render(v); }, 800);
+}
+
+function collect(v, id) {
+  state[v].purchased[id] = true;
+  var o = OFFERS[id];
+  showToast((o.isFree ? 'Claimed' : 'Purchased') + ': ' + (o.isDecoy ? 'Starter' : o.milestone + ' trophies') + (o.isFree ? ' 🎁' : ' ✅'));
+  render(v);
+}
+
+function rst(v) {
+  state[v].progress = 0; state[v].purchased = {}; state[v].justUnlocked = {};
+  render(v);
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(function() { t.classList.remove('show'); }, 2300);
+}
+
+var secs = 42369;
+setInterval(function() {
+  secs = Math.max(0, secs - 1);
+  var h = String(Math.floor(secs/3600)).padStart(2,'0');
+  var m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+  var s = String(secs%60).padStart(2,'0');
+  var str = h + 'h ' + m + 'm ' + s + 's';
+  document.getElementById('cdA').textContent = str;
+  document.getElementById('cdB').textContent = str;
+}, 1000);
+
+render('A'); render('B');
+</script>
